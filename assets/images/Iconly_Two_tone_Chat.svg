@@ -1,0 +1,8 @@
+<svg id="Iconly_Two-tone_Chat" data-name="Iconly/Two-tone/Chat" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+  <g id="Chat" transform="translate(2 2)">
+    <path id="Path" d="M10.057,0A10,10,0,0,0,1.138,14.629l.2.39a1.3,1.3,0,0,1,.1,1,19.8,19.8,0,0,0-.715,2.324c0,.4.114.629.544.619A18.271,18.271,0,0,0,3.5,18.314a1.481,1.481,0,0,1,.954.057c.277.133.839.476.859.476A10,10,0,1,0,10.057,0Z" transform="translate(0 0)" fill="none" stroke="#200e32" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="1.5"/>
+    <ellipse id="Oval" cx="0.477" cy="0.476" rx="0.477" ry="0.476" transform="translate(4.81 9.524)" fill="#200e32" stroke="#200e32" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="1.5" opacity="0.4"/>
+    <ellipse id="Oval-2" data-name="Oval" cx="0.477" cy="0.476" rx="0.477" ry="0.476" transform="translate(9.58 9.524)" fill="#200e32" stroke="#200e32" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="1.5" opacity="0.4"/>
+    <ellipse id="Oval-3" data-name="Oval" cx="0.477" cy="0.476" rx="0.477" ry="0.476" transform="translate(14.35 9.524)" fill="#200e32" stroke="#200e32" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="1.5" opacity="0.4"/>
+  </g>
+</svg>
