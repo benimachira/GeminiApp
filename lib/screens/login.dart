@@ -1,15 +1,33 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:gemini_app/screens/colors.dart';
+import 'package:gemini_app/screens/database_helper.dart';
 import 'package:gemini_app/screens/reset_password.dart';
 import 'package:gemini_app/screens/universal_methods.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:gemini_app/utils/user_service.dart';
 
 import 'HomeScreen.dart';
 import 'custom_color.dart';
 
-class Login extends StatelessWidget {
+class Login extends StatefulWidget {
+  @override
+  State<Login> createState() => _LoginState();
+}
+
+class _LoginState extends State<Login> {
   var _name_controller = TextEditingController(text: '');
+
+  var _pass_controller = TextEditingController(text: '');
+
   var color_green = ColorsLocal.color_green;
+  DatabaseHelper db = DatabaseHelper.instance;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,11 +51,11 @@ class Login extends StatelessWidget {
                       minLines: 1,
                       decoration: new InputDecoration(
                         prefixIcon: Icon(
-                          Icons.phone_outlined,
+                          Icons.person,
                           size: 16,
                         ),
                         contentPadding: EdgeInsets.fromLTRB(16.0, 0, 16.0, 0),
-                        hintText: 'Phone number',
+                        hintText: 'User name',
                         hintStyle: TextStyle(fontSize: 13, color: Colors.grey),
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8.0),
@@ -70,7 +88,7 @@ class Login extends StatelessWidget {
                       height: 16,
                     ),
                     TextFormField(
-                      controller: _name_controller,
+                      controller: _pass_controller,
                       minLines: 1,
                       decoration: new InputDecoration(
                         prefixIcon: Icon(
@@ -140,15 +158,30 @@ class Login extends StatelessWidget {
                         onPrimary: Colors.white, // foreground
                       ),
                       onPressed: () {
-                        Navigator.push(
-                          context,
-                          CupertinoPageRoute(builder: (context) => HomeScreen()),
-                        );
+
+                        String name= _name_controller.text;
+                        String pass= _pass_controller.text;
+
+                        if (name.isEmpty) {
+                          UniversalMethods.show_toast(
+                              'Enter your phone number');
+                          return;
+                        }
+
+                        if (pass.isEmpty) {
+                          UniversalMethods.show_toast(
+                              'Enter your Gemini password');
+                          return;
+                        }
+
+                        showLoaderDialog(context, 'Authenticating');
+
+
+                        _login(name,pass);
+
+
                       },
-                      // onPressed: () {
-                      //   HomeScreen
-                      //   UniversalMethods.show_toast('To inventory page');
-                      // },
+
                       // color: HexColor('#0F305E'),
                       // textColor: Colors.white,
                       child: Text(
@@ -165,4 +198,39 @@ class Login extends StatelessWidget {
       ),
     );
   }
+
+
+
+  _login(login_details, password) async{
+    String x = await UserService().user_login(login_details,password);
+    Navigator.of(context).pop();
+
+    if(x=='NO'){
+      UniversalMethods.show_toast('Invalid Username or password');
+      return;
+    }
+
+    Phoenix.rebirth(context);
+
+  }
+
+  showLoaderDialog(BuildContext context, String message) {
+    AlertDialog alert = AlertDialog(
+      content: new Row(
+        children: [
+          CircularProgressIndicator(),
+          Container(
+              margin: EdgeInsets.only(left: 7), child: Text("${message}...")),
+        ],
+      ),
+    );
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
+
 }

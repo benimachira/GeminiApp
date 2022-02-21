@@ -314,7 +314,7 @@ class CustomData {
       'measure_unit': 'Kg',
       'description': '',
       'image': 'assets/images/tomato.jpeg',
-      'qr_status':0,
+      'qr_status': 0,
       'description':
           'In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content',
     },
@@ -325,7 +325,7 @@ class CustomData {
       'price_max': 80,
       'pack_quantity': 1,
       'measure_unit': 'Kg',
-      'qr_status':0,
+      'qr_status': 0,
       'description':
           'In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content',
       'image': 'assets/images/peppergreen.jpg',
@@ -337,7 +337,7 @@ class CustomData {
       'price_max': 500,
       'pack_quantity': 1,
       'measure_unit': 'Kg',
-      'qr_status':0,
+      'qr_status': 0,
       'description':
           'In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content',
       'image': 'assets/images/onion.jpg',
@@ -349,7 +349,7 @@ class CustomData {
       'price_max': 100,
       'pack_quantity': 10,
       'measure_unit': 'Kg',
-      'qr_status':0,
+      'qr_status': 0,
       'description':
           'In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content',
       'image': 'assets/images/maize.jpg',
@@ -361,7 +361,7 @@ class CustomData {
       'price_max': 280,
       'pack_quantity': 2,
       'measure_unit': 'Kg',
-      'qr_status':0,
+      'qr_status': 0,
       'description':
           'In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content',
       'image': 'assets/images/red_beans.jpg',
@@ -373,7 +373,7 @@ class CustomData {
       'price_max': 70,
       'pack_quantity': 1,
       'measure_unit': 'Kg',
-      'qr_status':0,
+      'qr_status': 0,
       'description':
           'In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content',
       'image': 'assets/images/mango.jpg',
@@ -385,7 +385,7 @@ class CustomData {
       'price_max': 80,
       'pack_quantity': 1,
       'measure_unit': 'Kg',
-      'qr_status':0,
+      'qr_status': 0,
       'description':
           'In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content',
       'image': 'assets/images/passion.jpg',
@@ -442,6 +442,15 @@ class CustomData {
       'phone': '07000007',
       'avatar': 'assets/images/avatars/pass_07.jpeg',
     }
+  ];
+
+  static List issues = [
+    {'name': 'Raise a ticket by selection an issue', 'action': 1},
+    {'name': 'Inventory does not match that from the application', 'action': 1},
+    {'name': 'Produce received is damaged', 'action': 1},
+    {'name': 'Team members experiencing downton', 'action': 2},
+    {'name': 'Delayed delivery to location', 'action': 2},
+    {'name': 'Spoilt delivery on a zone', 'action': 2},
   ];
 
   List<ModelInventory> convert_product(var list) {

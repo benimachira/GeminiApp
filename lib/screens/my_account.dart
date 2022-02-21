@@ -1,13 +1,23 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:gemini_app/screens/reffer_a_friend.dart';
 
 import 'change_password.dart';
 import 'custom_bottom_button.dart';
+import 'database_helper.dart';
 import 'edit_profile.dart';
 
-class MyAccount extends StatelessWidget {
+class MyAccount extends StatefulWidget {
+
+  @override
+  State<MyAccount> createState() => _MyAccountState();
+}
+
+class _MyAccountState extends State<MyAccount> {
+  DatabaseHelper db = DatabaseHelper.instance;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -17,13 +27,10 @@ class MyAccount extends StatelessWidget {
             CupertinoSliverNavigationBar(
               leading: Material(
                 child: InkWell(
-                  onTap: () {
-                    Navigator.pop(context);
-                  },
-                  child: Icon(
-                    Icons.arrow_back,
-                    color: Colors.blue,
-                  ),
+                  // onTap: () {
+                  //   Navigator.pop(context);
+                  // },
+                  child: Container(),
                 ),
               ),
               largeTitle: Text('My Account'),
@@ -214,12 +221,44 @@ class MyAccount extends StatelessWidget {
               Divider(
                 color: Colors.grey[300],
               ),
+              SizedBox(
+                height: 24,
+              ),
+              InkWell(
+                onTap: (){
+                  _log_out(context);
+                },
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.logout,
+                      color: Colors.blue,
+                      size: 22,
+                    ),
+                    SizedBox(
+                      width: 8,
+                    ),
+                    Expanded(child: Text('Logout')),
+                    Icon(
+                      Icons.arrow_forward,
+                      size: 16,
+                      color: Colors.blue,
+                    ),
+                  ],
+                ),
+              ),
+              Divider(
+                color: Colors.grey[300],
+              ),
             ],
           ),
         ),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: CustomBottomButton('LOG OUT',Icons.lock,Colors.grey),
     );
+  }
+
+  _log_out(context)async {
+    await db.log_out();
+    Phoenix.rebirth(context);
   }
 }

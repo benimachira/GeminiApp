@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:gemini_app/screens/registration.dart';
+import 'package:gemini_app/screens/splash_screen.dart';
 
 import 'screens/login.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(
+    Phoenix(
+      child: MyApp(),
+    ),
+  );
   // runApp(Registration());
 }
 
@@ -18,7 +24,7 @@ class MyApp extends StatelessWidget {
         primaryColor: Colors.white,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: Login(),
+      home: SplashScreen(),
     );
   }
 }

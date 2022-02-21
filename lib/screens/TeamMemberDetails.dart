@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:gemini_app/screens/report_an_issue.dart';
 
 class TeamMemberDetails extends StatelessWidget {
   Map person = {};
@@ -29,7 +30,7 @@ class TeamMemberDetails extends StatelessWidget {
                   ),
                 ),
               ),
-              largeTitle: Text('Team Details'),
+              largeTitle: Text('Team Member'),
             ),
             SliverToBoxAdapter(
               child: Container(
@@ -53,7 +54,7 @@ class TeamMemberDetails extends StatelessWidget {
         },
         body: Center(
           child: Stack(
-            children: list(),
+            children: list(context),
           ),
         ),
       ),
@@ -91,7 +92,7 @@ class TeamMemberDetails extends StatelessWidget {
 
   double radius = 100.0;
 
-  List<Widget> list() {
+  List<Widget> list(BuildContext context) {
     final double firstItemAngle = pi;
     final double lastItemAngle = pi;
     final double angleDiff = (firstItemAngle + lastItemAngle) / 5;
@@ -99,78 +100,95 @@ class TeamMemberDetails extends StatelessWidget {
 
     return data.map((Map data_map) {
       currentAngle += angleDiff;
-      return _radialListItem(currentAngle, data_map['index']);
+      return _radialListItem(currentAngle, data_map['index'],context);
     }).toList();
   }
 
-  Widget _radialListItem(double angle, int index) {
+  Widget _radialListItem(double angle, int index, BuildContext context) {
     final x = cos(angle) * radius;
     final y = sin(angle) * radius;
 
     return Center(
       child: Transform(
-          transform: index == 1
-              ? Matrix4.translationValues(0.0, 0.0, 0.0)
-              : Matrix4.translationValues(x, y, 0.0),
-          child: InkWell(
-              onTap: () {
-                print(index.toString());
-              },
-              child: index == 1
-                  ? Container(
-                      decoration: new BoxDecoration(
-                        color: Colors.grey[200],
-                        border: Border.all(
-                          color: Colors.blue[400],
-                        ),
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(50),
-                        ),
-                        // color: HexColor('#D60812'),
+        transform: index == 1
+            ? Matrix4.translationValues(0.0, 0.0, 0.0)
+            : Matrix4.translationValues(x, y, 0.0),
+        child: InkWell(
+          onTap: () {
+            print(index.toString());
+          },
+          child: index == 1
+              ? Container(
+                  decoration: new BoxDecoration(
+                    color: Colors.grey[200],
+                    border: Border.all(
+                      color: Colors.blue[400],
+                    ),
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(50),
+                    ),
+                    // color: HexColor('#D60812'),
+                  ),
+                  child: SizedBox(
+                    height: 50,
+                    width: 50,
+                    child: CircleAvatar(
+                      backgroundImage: AssetImage(person['avatar']),
+                    ),
+                  ),
+                )
+              : InkWell(
+                  onTap: () {
+                    print(index);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) {
+                          if (index == 3) {
+                            return ReportIssue(2);
+                          }
+                        },
                       ),
-                      child: SizedBox(
-                        height: 50,
-                        width: 50,
-                        child: CircleAvatar(
-                          backgroundImage: AssetImage(person['avatar']),
-                        ),
+                    );
+                  },
+                  child: Container(
+                    width: 80,
+                    height: 80,
+                    padding: EdgeInsets.all(8),
+                    decoration: new BoxDecoration(
+                      color: Colors.grey[100],
+                      border: Border.all(
+                        color: Colors.blue[400],
                       ),
-                    )
-                  : Container(
-                      width: 80,
-                      height: 80,
-                      padding: EdgeInsets.all(8),
-                      decoration: new BoxDecoration(
-                        color: Colors.grey[100],
-                        border: Border.all(
-                          color: Colors.blue[400],
-                        ),
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(50),
-                        ),
-                        // color: HexColor('#D60812'),
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(50),
                       ),
-                      child: Center(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            SvgPicture.asset(
-                              '${data[index - 1]['image']}',
-                              height: 24,
-                              width: 24,
-                              color: Colors.blue,
-                            ),
-                            Text(
-                              '${data[index - 1]['title']}',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                  color: Colors.grey[800], fontSize: 12),
-                            ),
-                          ],
-                        ),
+                      // color: HexColor('#D60812'),
+                    ),
+                    child: Center(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          SvgPicture.asset(
+                            '${data[index - 1]['image']}',
+                            height: 24,
+                            width: 24,
+                            color: Colors.blue,
+                          ),
+                          Text(
+                            '${data[index - 1]['title']}',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                                color: Colors.grey[800], fontSize: 12),
+                          ),
+                        ],
                       ),
-                    ))),
+                    ),
+                  ),
+                ),
+        ),
+      ),
     );
   }
 }

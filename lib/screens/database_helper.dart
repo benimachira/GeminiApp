@@ -5,15 +5,21 @@ import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 
 class DatabaseHelper {
-  static final _databaseName = "adalabs_afya_record.db";
+  static final _databaseName = "gemini.db";
   static final _databaseVersion = 1;
 
   static final table_cart = 'tbl_cart';
+  static final table_config = 'tbl_config';
 
   static final CART_item_id = 'item_id';
   static final CART_quantity = 'quantity';
   static final CART_date_added = 'date_added';
   static final CART_checkout_status = 'checkout_status';
+
+  static final CONFIG_id = 'id';
+  static final CONFIG_access_token = 'access_token';
+  static final CONFIG_uid = 'uid';
+  static final CONFIG_user_role = 'user_role';
 
   // make this a singleton class
   DatabaseHelper._privateConstructor();
@@ -42,6 +48,8 @@ class DatabaseHelper {
   Future _onCreate(Database db, int version) async {
     await db.execute('CREATE TABLE $table_cart ( $CART_item_id INTEGER,'
         '$CART_quantity INTEGER,$CART_checkout_status INTEGER,$CART_date_added TEXT)');
+    await db.execute('CREATE TABLE $table_config ( $CONFIG_access_token TEXT,$CONFIG_id INTEGER PRIMARY KEY ON CONFLICT REPLACE,$CONFIG_uid INTEGER '
+        ',$CONFIG_user_role TEXT)');
   }
 
   // Helper methods
@@ -96,6 +104,47 @@ class DatabaseHelper {
     print('inserted row id: $id');
   }
 
+  Future add_auth_token(token,uid,role) async {
+    Database db = await DatabaseHelper.instance.database;
+
+    final id = await db.rawInsert(
+        'INSERT INTO ${table_config} (${CONFIG_access_token},${CONFIG_id},${CONFIG_uid},${CONFIG_user_role}) VALUES(?,?,?,?)',
+        [token, 1,uid,role]);
+    print('inserted row id: $id');
+  }
+  Future<String> get_auth_token() async {
+    // get a reference to the database
+    Database db = await DatabaseHelper.instance.database;
+
+    // raw query
+    List<Map> result = await db.rawQuery('SELECT * FROM $table_config LIMIT 1');
+    String token='';
+
+    // print the results
+    result.forEach((row) {
+      token= row['access_token'];
+    });
+    // {_id: 2, name: Mary, age: 32}
+    return token;
+  }
+
+  Future<String> get_user_role() async {
+    // get a reference to the database
+    Database db = await DatabaseHelper.instance.database;
+
+    // raw query
+    List<Map> result = await db.rawQuery('SELECT * FROM $table_config LIMIT 1');
+    String role='';
+
+    // print the results
+    result.forEach((row) {
+      role= row['user_role'];
+    });
+    // {_id: 2, name: Mary, age: 32}
+    return role;
+  }
+
+
   Future<int> update_symptoms(item_id, count) async {
     Database db = await instance.database;
 
@@ -103,4 +152,12 @@ class DatabaseHelper {
         'UPDATE $table_cart SET ${CART_quantity}=?, ${CART_checkout_status} =? WHERE ${CART_item_id}=?',
         [count, 0, item_id]);
   }
+
+  Future<int> log_out() async {
+    Database db = await instance.database;
+
+    return await db.rawUpdate(
+        'Delete from $table_config');
+  }
+
 }

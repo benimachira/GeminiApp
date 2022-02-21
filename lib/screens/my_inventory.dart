@@ -47,23 +47,6 @@ class _MyInventoryState extends State<MyInventory> {
               SizedBox(
                 height: 16,
               ),
-              Container(
-                margin: EdgeInsets.all(16),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: CupertinoSlidingSegmentedControl(
-                          groupValue: segmentedControlGroupValue,
-                          children: myTabs,
-                          onValueChanged: (i) {
-                            setState(() {
-                              segmentedControlGroupValue = i;
-                            });
-                          }),
-                    ),
-                  ],
-                ),
-              ),
               SizedBox(
                 height: 16,
               ),

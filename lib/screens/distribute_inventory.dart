@@ -2,22 +2,27 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:gemini_app/models/model_inventory.dart';
+import 'package:gemini_app/screens/qr_code_scanner.dart';
 import 'package:gemini_app/screens/recieve_inventory_summary.dart';
+import 'package:gemini_app/screens/universal_methods.dart';
 
+import 'custom_bottom_button.dart';
 import 'custom_data.dart';
 import 'database_helper.dart';
 
 class DistributeInventory extends StatefulWidget {
   @override
-  _RecieveInventoryState createState() => _RecieveInventoryState();
+  _DistributeInventoryState createState() => _DistributeInventoryState();
 }
 
-class _RecieveInventoryState extends State<DistributeInventory> {
+class _DistributeInventoryState extends State<DistributeInventory> {
   final dbHelper = DatabaseHelper.instance;
 
   List raw_data = CustomData().inventory_data_custom;
 
   List<ModelInventory> inventory = null;
+  int segmentedControlGroupValue = 0;
+  Map<int, Widget> myTabs;
 
   @override
   void initState() {
@@ -27,18 +32,27 @@ class _RecieveInventoryState extends State<DistributeInventory> {
 
   @override
   Widget build(BuildContext context) {
+    List<ModelInventory> open =
+    inventory.where((e) => e.qr_status == 0).toList();
+    List<ModelInventory> closed =
+    inventory.where((e) => e.qr_status == 1).toList();
+
+    myTabs = <int, Widget>{
+      0: Text('${open.length} Open'),
+      1: Text('${closed.length} Closed')
+    };
+
     return Scaffold(
       body: NestedScrollView(
         headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
           return <Widget>[
             CupertinoSliverNavigationBar(
-              leading: InkWell(
-                onTap: () {
-                  Navigator.pop(context);
-                },
-                child: Icon(
-                  Icons.arrow_back,
-                  color: Colors.blue,
+              leading: Material(
+                child: InkWell(
+                  // onTap: () {
+                  //   Navigator.pop(context);
+                  // },
+                  child: Container(),
                 ),
               ),
               largeTitle: Text('Distribute Inventory'),
@@ -99,7 +113,7 @@ class _RecieveInventoryState extends State<DistributeInventory> {
                 ),
               ),
               DraggableScrollableSheet(
-                initialChildSize: 0.35,
+                initialChildSize: 0.4,
                 minChildSize: 0.2,
                 builder:
                     (BuildContext context, ScrollController scrollController) {
@@ -129,166 +143,59 @@ class _RecieveInventoryState extends State<DistributeInventory> {
                                       borderRadius: BorderRadius.circular(16)),
                                 ),
                                 SizedBox(
-                                  height: 8,
+                                  height: 16,
                                 ),
                                 Text(
-                                  'Distribution Basket',
+                                  'Inventory Basket',
                                   style: TextStyle(
-                                    fontWeight: FontWeight.w600,
-                                    fontSize: 16,
+                                    fontWeight: FontWeight.w800,
+                                    fontSize: 18,
                                   ),
                                 ),
+                                SizedBox(
+                                  height: 16,
+                                ),
                                 Container(
-                                  margin: EdgeInsets.only(right: 16, left: 16),
-                                  child: ListView.builder(
-                                    itemCount: inventory.length,
-                                    shrinkWrap: true,
-                                    physics:
-                                        const NeverScrollableScrollPhysics(),
-                                    itemBuilder: (context, index) {
-                                      var inventry = inventory[index];
-                                      return Column(
-                                        children: [
-                                          Container(
-                                            margin: EdgeInsets.only(
-                                                bottom: 16, top: 16),
-                                            child: Row(
-                                              children: [
-                                                Image.asset(
-                                                  inventry.image,
-                                                  width: 50,
-                                                  height: 50,
-                                                  fit: BoxFit.cover,
-                                                ),
-                                                SizedBox(
-                                                  width: 16,
-                                                ),
-                                                Expanded(
-                                                  child: Column(
-                                                    children: [
-                                                      Text(
-                                                        inventry.name,
-                                                        style: TextStyle(
-                                                            fontSize: 16,
-                                                            color: Colors.black,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .bold),
-                                                      ),
-                                                      SizedBox(
-                                                        height: 4,
-                                                      ),
-                                                      Text(
-                                                        'KES ${inventry.price} - ${inventry.price_max} /${inventry.measure_unit}',
-                                                        style: TextStyle(
-                                                          fontSize: 12,
-                                                        ),
-                                                      ),
-                                                      SizedBox(
-                                                        height: 4,
-                                                      ),
-                                                      Text(
-                                                        '${inventry.pack_quantity} Packets',
-                                                        style: TextStyle(
-                                                            fontSize: 11,
-                                                            color: Colors.blue,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .bold),
-                                                      ),
-                                                    ],
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                  ),
-                                                ),
-                                                Column(
-                                                  children: [
-                                                    Text(
-                                                      '100 * 2',
-                                                      style: TextStyle(
-                                                        color: Colors.grey[800],
-                                                        fontSize: 12,
-                                                      ),
-                                                    ),
-                                                    SizedBox(
-                                                      height: 4,
-                                                    ),
-                                                    FutureBuilder(
-                                                        future: _item_count(
-                                                            inventry.id),
-                                                        builder: (context,
-                                                            snapshot) {
-                                                          int count = 0;
-                                                          if (snapshot
-                                                              .hasData) {
-                                                            count =
-                                                                snapshot.data;
-                                                          } else {
-                                                            count = 0;
-                                                            final dbHelper =
-                                                                DatabaseHelper
-                                                                    .instance;
-                                                          }
-
-                                                          return count > 0
-                                                              ? Text(
-                                                                  'KES ${count * inventry.price}',
-                                                                  style: TextStyle(
-                                                                      color: Colors
-                                                                              .grey[
-                                                                          700],
-                                                                      fontSize:
-                                                                          13,
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .bold),
-                                                                  overflow:
-                                                                      TextOverflow
-                                                                          .ellipsis,
-                                                                )
-                                                              : Text(
-                                                                  'KES ${2 * inventry.price}',
-                                                                  style: TextStyle(
-                                                                      color: Colors
-                                                                              .grey[
-                                                                          700],
-                                                                      fontSize:
-                                                                          13,
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .bold),
-                                                                  overflow:
-                                                                      TextOverflow
-                                                                          .ellipsis,
-                                                                );
-                                                        }),
-                                                    SizedBox(
-                                                      height: 4,
-                                                    ),
-                                                    Icon(
-                                                      Icons
-                                                          .check_circle_outline,
-                                                      size: 18,
-                                                      color: Colors.grey[700],
-                                                    ),
-                                                  ],
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.end,
-                                                ),
-                                                SizedBox(
-                                                  width: 16,
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                          Divider(
-                                            color: Colors.grey[300],
-                                          )
-                                        ],
-                                      );
-                                    },
+                                  margin: EdgeInsets.all(16),
+                                  child: Row(
+                                    children: [
+                                      Expanded(
+                                        child: CupertinoSlidingSegmentedControl(
+                                            groupValue:
+                                            segmentedControlGroupValue,
+                                            children: myTabs,
+                                            onValueChanged: (i) {
+                                              setState(() {
+                                                segmentedControlGroupValue = i;
+                                              });
+                                            }),
+                                      ),
+                                    ],
                                   ),
+                                ),
+                                SizedBox(
+                                  height: 8,
+                                ),
+                                segmentedControlGroupValue == 0
+                                    ? Container(
+                                  height:
+                                  MediaQuery.of(context).size.height,
+                                  child: list_widget(open),
+                                )
+                                    : closed.isEmpty
+                                    ? Container(
+                                  child: Container(
+                                    child: Text('No items yet'),
+                                    height: MediaQuery.of(context)
+                                        .size
+                                        .height,
+                                  ),
+                                )
+                                    : Container(
+                                  height: MediaQuery.of(context)
+                                      .size
+                                      .height,
+                                  child: list_widget(closed),
                                 ),
                               ],
                             ),
@@ -304,54 +211,186 @@ class _RecieveInventoryState extends State<DistributeInventory> {
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: Container(
-        padding: EdgeInsets.all(12),
-        margin: EdgeInsets.all(16),
-        decoration: new BoxDecoration(
-          color: Colors.blue,
-
-          borderRadius: BorderRadius.all(
-            Radius.circular(100),
-          ),
-          // color: HexColor('#D60812'),
-        ),
-        child: InkWell(
-          onTap: () {
+      floatingActionButton: closed.isNotEmpty
+          ? InkWell(
+        onTap: () {
+          if (closed.isNotEmpty) {
             Navigator.push(
               context,
               CupertinoPageRoute(
-                builder: (context) => RecieveIventorySummary([]),
+                builder: (context) => RecieveIventorySummary(closed),
               ),
             );
-          },
-          child: Row(
-            mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Expanded(
-                flex: 9,
-                child: Text(
-                  'CHECK OUT',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(color: Colors.white, fontSize: 13),
-                ),
-              ),
-              SizedBox(
-                width: 8,
-              ),
-              Expanded(
-                flex: 1,
-                child: Icon(
-                  Icons.arrow_forward,
-                  color: Colors.white,
-                  size: 18,
-                ),
-              ),
-            ],
-          ),
+          } else {
+            UniversalMethods.show_toast('Scan some items first');
+          }
+        },
+        child: CustomBottomButton(
+          '${closed.length}/${inventory.length} RECEIVED',
+          Icons.arrow_forward,
         ),
+      )
+          : Container(),
+    );
+  }
+
+  Widget list_widget(list) {
+    return Container(
+      margin: EdgeInsets.only(right: 16, left: 16),
+      child: ListView.builder(
+        itemCount: list.length,
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
+        itemBuilder: (context, index) {
+          ModelInventory inventry = list[index];
+          return InkWell(
+            onTap: () {
+              inventry.qr_status == 0
+                  ? _navigateAndDisplaySelection(context, inventry)
+                  : () {};
+            },
+            child: Column(
+              children: [
+                Container(
+                  margin: EdgeInsets.only(bottom: 32),
+                  child: Row(
+                    children: [
+                      Image.asset(
+                        inventry.image,
+                        width: 50,
+                        height: 50,
+                        fit: BoxFit.cover,
+                      ),
+                      SizedBox(
+                        width: 16,
+                      ),
+                      Expanded(
+                        child: Column(
+                          children: [
+                            Text(
+                              inventry.name,
+                              style: TextStyle(
+                                  fontSize: 16,
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                            SizedBox(
+                              height: 4,
+                            ),
+                            Text(
+                              'KES ${inventry.price} - ${inventry.price_max} /${inventry.measure_unit}',
+                              style: TextStyle(
+                                fontSize: 12,
+                              ),
+                            ),
+                            SizedBox(
+                              height: 4,
+                            ),
+                            Text(
+                              '${inventry.pack_quantity} Packets',
+                              style: TextStyle(
+                                  fontSize: 11,
+                                  color: Colors.blue,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ],
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                        ),
+                      ),
+                      Column(
+                        children: [
+                          Text(
+                            '100 * 2',
+                            style: TextStyle(
+                              color: Colors.grey[800],
+                              fontSize: 12,
+                            ),
+                          ),
+                          SizedBox(
+                            height: 4,
+                          ),
+                          FutureBuilder(
+                              future: _item_count(inventry.id),
+                              builder: (context, snapshot) {
+                                int count = 0;
+                                if (snapshot.hasData) {
+                                  count = snapshot.data;
+                                } else {
+                                  count = 0;
+                                  final dbHelper = DatabaseHelper.instance;
+                                }
+
+                                return count > 0
+                                    ? Text(
+                                  'KES ${count * inventry.price}',
+                                  style: TextStyle(
+                                      color: Colors.grey[700],
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.bold),
+                                  overflow: TextOverflow.ellipsis,
+                                )
+                                    : Text(
+                                  'KES ${2 * inventry.price}',
+                                  style: TextStyle(
+                                      color: Colors.grey[700],
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.bold),
+                                  overflow: TextOverflow.ellipsis,
+                                );
+                              }),
+                          SizedBox(
+                            height: 4,
+                          ),
+                          inventry.qr_status == 0
+                              ? Icon(
+                            Icons.check_circle_outline,
+                            size: 18,
+                            color: Colors.grey[300],
+                          )
+                              : Icon(
+                            Icons.check_circle,
+                            size: 18,
+                            color: Colors.green,
+                          ),
+                        ],
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                      ),
+                      SizedBox(
+                        width: 16,
+                      ),
+                    ],
+                  ),
+                ),
+                Divider(
+                  color: Colors.grey[300],
+                )
+              ],
+            ),
+          );
+        },
       ),
     );
+  }
+
+  void _navigateAndDisplaySelection(BuildContext context, inventry) async {
+    // Navigator.push returns a Future that completes after calling
+    // Navigator.pop on the Selection Screen.
+    final result = await Navigator.push(
+      context,
+      CupertinoPageRoute(
+        builder: (context) => QRScanner(inventry),
+      ),
+    );
+    setState(() {});
+
+    UniversalMethods.show_toast(
+        '${result != null ? result : 'Error Scanning'}');
+
+    // // After the Selection Screen returns a result, hide any previous snackbars
+    // // and show the new result.
+    // ScaffoldMessenger.of(context)
+    //   ..removeCurrentSnackBar()
+    //   ..showSnackBar(SnackBar(content: Text('$result')));
   }
 
   _item_count(id) async {

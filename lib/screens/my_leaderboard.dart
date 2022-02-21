@@ -55,7 +55,6 @@ class _MyLeaderBoardState extends State<MyLeaderBoard> {
                     child: CupertinoSlidingSegmentedControl(
                         groupValue: segmentedControlGroupValue,
                         children: myTabs,
-
                         onValueChanged: (i) {
                           setState(() {
                             segmentedControlGroupValue = i;
@@ -111,14 +110,6 @@ class _MyLeaderBoardState extends State<MyLeaderBoard> {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                   ),
-                                ),
-                                SizedBox(
-                                  width: 8,
-                                ),
-                                Icon(
-                                  Icons.arrow_forward,
-                                  color: Colors.grey,
-                                  size: 16,
                                 ),
                               ],
                             ),

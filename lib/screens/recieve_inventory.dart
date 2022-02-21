@@ -49,13 +49,10 @@ class _RecieveInventoryState extends State<RecieveInventory> {
             CupertinoSliverNavigationBar(
               leading: Material(
                 child: InkWell(
-                  onTap: () {
-                    Navigator.pop(context);
-                  },
-                  child: Icon(
-                    Icons.arrow_back,
-                    color: Colors.blue,
-                  ),
+                  // onTap: () {
+                  //   Navigator.pop(context);
+                  // },
+                  child: Container(),
                 ),
               ),
               largeTitle: Text('Receive Inventory'),
@@ -151,8 +148,8 @@ class _RecieveInventoryState extends State<RecieveInventory> {
                                 Text(
                                   'Order Basket',
                                   style: TextStyle(
-                                    fontWeight: FontWeight.w600,
-                                    fontSize: 16,
+                                    fontWeight: FontWeight.w800,
+                                    fontSize: 18,
                                   ),
                                 ),
                                 SizedBox(

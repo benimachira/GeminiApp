@@ -1,9 +1,17 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:gemini_app/screens/custom_data.dart';
 
 import 'custom_bottom_button.dart';
 
 class ReportIssue extends StatefulWidget {
+  int route_id;
+
+  ReportIssue(route_id) {
+    this.route_id = route_id;
+    print(route_id);
+  }
+
   @override
   _ReportIssueState createState() => _ReportIssueState();
 }
@@ -11,6 +19,21 @@ class ReportIssue extends StatefulWidget {
 class _ReportIssueState extends State<ReportIssue> {
   int _radioValue1 = -1;
   int correctScore = 0;
+  int icoming;
+
+  List _issue_list = CustomData.issues;
+  List _searchList = [];
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _issue_list.forEach((p) {
+      if (p['action'] == widget.route_id) {
+        _searchList.add(p);
+      }
+    });
+  }
 
   void _handleRadioValueChange1(int value) {
     setState(() {
@@ -68,89 +91,40 @@ class _ReportIssueState extends State<ReportIssue> {
           ];
         },
         body: Container(
-          child: Column(
-            children: [
-              SizedBox(
-                height: 16,
-              ),
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Row(
-                    children: [
-                      new Radio(
-                        value: 0,
-                        groupValue: _radioValue1,
-                        onChanged: _handleRadioValueChange1,
-                      ),
-                      Expanded(
-                        child: new Text(
-                          'Inventory does not match with the sales on the application',
-                          style: new TextStyle(color: Colors.grey[800]),
+          child: ListView.builder(
+              itemCount: _searchList.length,
+              itemBuilder: (context, index) {
+                return Column(
+                  children: [
+                    Row(
+                      children: [
+                        new Radio(
+                          value: 0,
+                          groupValue: _radioValue1,
+                          onChanged: _handleRadioValueChange1,
                         ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(
-                    height: 4,
-                  ),
-                  Divider(
-                    color: Colors.grey[200],
-                  ),
-                  SizedBox(
-                    height: 4,
-                  ),
-                  Row(
-                    children: [
-                      new Radio(
-                        value: 1,
-                        groupValue: _radioValue1,
-                        onChanged: _handleRadioValueChange1,
-                      ),
-                      Expanded(
-                        child: new Text(
-                          'Produce received is ro en or damaged.',
-                          style: new TextStyle(color: Colors.grey[800]),
+                        Expanded(
+                          child: new Text(
+                            _searchList[index]['name'],
+                            style: new TextStyle(color: Colors.grey[800]),
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(
-                    height: 4,
-                  ),
-                  Divider(
-                    color: Colors.grey[200],
-                  ),
-                  SizedBox(
-                    height: 4,
-                  ),
-                  Row(
-                    children: [
-                      new Radio(
-                        value: 2,
-                        groupValue: _radioValue1,
-                        onChanged: _handleRadioValueChange1,
-                      ),
-                      Expanded(
-                        child: new Text(
-                          'Lost contact with a member of the team',
-                          style: new TextStyle(color: Colors.grey[800]),
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ],
-          ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 4,
+                    ),
+                    Divider(
+                      color: Colors.grey[200],
+                    ),
+                  ],
+                );
+              }),
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: CustomBottomButton(
-        'REPORT A PROBLEM',
-        Icons.arrow_forward,
-        Colors.red
-      )
+          'REPORT A PROBLEM', Icons.arrow_forward, Colors.red),
     );
   }
 }

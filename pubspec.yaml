@@ -34,6 +34,8 @@ dependencies:
   path_provider: ^2.0.1
   flutter_svg: ^0.22.0
   qr_code_scanner: ^0.5.1
+  http: ^0.13.1
+  flutter_phoenix: ^1.0.0
 
 dev_dependencies:
   flutter_test:
@@ -96,6 +98,10 @@ flutter:
     - assets/images/Iconly_Two_tone_Edit_Square.svg
     - assets/images/qr_image.png
     - assets/images/Iconly_Two_tone_Notification.svg
+    - assets/images/retailer_survey.jpeg
+    - assets/images/transporter_survey.jpeg
+    - assets/images/suplier.jpeg
+    - assets/images/warehouse.jpeg
 
 
 

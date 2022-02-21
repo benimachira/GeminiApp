@@ -28,7 +28,7 @@ class _MySalesState extends State<MyOrders> {
         headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
           return <Widget>[
             CupertinoSliverNavigationBar(
-              largeTitle: Text('My Order'),
+              largeTitle: Text('My Orders'),
             )
           ];
         },
