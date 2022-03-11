@@ -210,6 +210,8 @@ class _LoginState extends State<Login> {
       return;
     }
 
+    UniversalMethods.show_toast('Login successful');
+
     Phoenix.rebirth(context);
 
   }

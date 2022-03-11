@@ -10,6 +10,7 @@ class DatabaseHelper {
 
   static final table_cart = 'tbl_cart';
   static final table_config = 'tbl_config';
+  static final table_survey_item = 'tbl_survey_item';
 
   static final CART_item_id = 'item_id';
   static final CART_quantity = 'quantity';
@@ -20,6 +21,16 @@ class DatabaseHelper {
   static final CONFIG_access_token = 'access_token';
   static final CONFIG_uid = 'uid';
   static final CONFIG_user_role = 'user_role';
+  static final CONFIG_verify = 'verify';
+
+  static final SV_product_name = 'product_name';
+  static final SV_cat = 'cat';
+  static final SV_daily_avg = 'avg';
+  static final SV_bp = 'bp';
+  static final SV_sp = 'sp';
+  static final SV_avg_price = 'avg_price';
+  static final SV_sync_state = 'sync_state';
+  static final SV_survey_id = 'survey_id';
 
   // make this a singleton class
   DatabaseHelper._privateConstructor();
@@ -48,8 +59,13 @@ class DatabaseHelper {
   Future _onCreate(Database db, int version) async {
     await db.execute('CREATE TABLE $table_cart ( $CART_item_id INTEGER,'
         '$CART_quantity INTEGER,$CART_checkout_status INTEGER,$CART_date_added TEXT)');
-    await db.execute('CREATE TABLE $table_config ( $CONFIG_access_token TEXT,$CONFIG_id INTEGER PRIMARY KEY ON CONFLICT REPLACE,$CONFIG_uid INTEGER '
-        ',$CONFIG_user_role TEXT)');
+    await db.execute(
+        'CREATE TABLE $table_config ( $CONFIG_access_token TEXT,$CONFIG_id INTEGER PRIMARY KEY ON CONFLICT REPLACE,$CONFIG_uid INTEGER '
+        ',$CONFIG_user_role TEXT,$CONFIG_verify INTEGER)');
+
+    await db.execute(
+        'CREATE TABLE $table_survey_item ( $SV_product_name TEXT,$SV_cat TEXT,$SV_daily_avg TEXT,$SV_bp TEXT,$SV_sp TEXT,$SV_avg_price TEXT'
+        ',$SV_sync_state INTEGER, $SV_survey_id INTEGER)');
   }
 
   // Helper methods
@@ -104,29 +120,50 @@ class DatabaseHelper {
     print('inserted row id: $id');
   }
 
-  Future add_auth_token(token,uid,role) async {
+  Future add_auth_token(token, uid, role, verify) async {
     Database db = await DatabaseHelper.instance.database;
 
     final id = await db.rawInsert(
-        'INSERT INTO ${table_config} (${CONFIG_access_token},${CONFIG_id},${CONFIG_uid},${CONFIG_user_role}) VALUES(?,?,?,?)',
-        [token, 1,uid,role]);
+        'INSERT INTO ${table_config} (${CONFIG_access_token},${CONFIG_id},${CONFIG_uid},${CONFIG_user_role},${CONFIG_verify}) VALUES(?,?,?,?,?)',
+        [token, 1, uid, role, verify]);
     print('inserted row id: $id');
   }
+
   Future<String> get_auth_token() async {
     // get a reference to the database
     Database db = await DatabaseHelper.instance.database;
 
     // raw query
     List<Map> result = await db.rawQuery('SELECT * FROM $table_config LIMIT 1');
-    String token='';
+    String token = '';
 
     // print the results
     result.forEach((row) {
-      token= row['access_token'];
+      token = row['access_token'];
     });
     // {_id: 2, name: Mary, age: 32}
     return token;
   }
+
+  Future<List<Map>> get_user() async {
+    // get a reference to the database
+    Database db = await DatabaseHelper.instance.database;
+
+    // raw query
+    List<Map> result = await db.rawQuery('SELECT * FROM $table_config LIMIT 1');
+
+    return result;
+  }
+
+  // Future<List<Map>> get_a_user() async {
+  //   // get a reference to the database
+  //   Database db = await DatabaseHelper.instance.database;
+  //
+  //   // raw query
+  //   List<Map> result = await db.rawQuery('SELECT * FROM $table_config LIMIT 1');
+  //
+  //   return result;
+  // }
 
   Future<String> get_user_role() async {
     // get a reference to the database
@@ -134,16 +171,15 @@ class DatabaseHelper {
 
     // raw query
     List<Map> result = await db.rawQuery('SELECT * FROM $table_config LIMIT 1');
-    String role='';
+    String role = '';
 
     // print the results
     result.forEach((row) {
-      role= row['user_role'];
+      role = row['user_role'];
     });
     // {_id: 2, name: Mary, age: 32}
     return role;
   }
-
 
   Future<int> update_symptoms(item_id, count) async {
     Database db = await instance.database;
@@ -156,8 +192,34 @@ class DatabaseHelper {
   Future<int> log_out() async {
     Database db = await instance.database;
 
-    return await db.rawUpdate(
-        'Delete from $table_config');
+    return await db.rawUpdate('Delete from $table_config');
   }
 
+  Future<List<Map>> get_survey() async {
+    // get a reference to the database
+    Database db = await DatabaseHelper.instance.database;
+
+    // raw query
+    List<Map> result = await db
+        .rawQuery('SELECT * FROM $table_survey_item WHERE sync_state=0');
+
+    return result;
+  }
+
+  Future update_survey(id) async {
+    // get a reference to the database
+    Database db = await DatabaseHelper.instance.database;
+    await db.rawQuery(
+        'UPDATE $table_survey_item SET sync_state=1 WHERE $SV_survey_id = ${id}');
+  }
+
+  Future add_survey_seller_item(
+      cat, product_name, daily_avg, bp, sp, avg_price, survey_id) async {
+    Database db = await DatabaseHelper.instance.database;
+
+    final id = await db.rawInsert(
+        'INSERT INTO ${table_survey_item} (${SV_cat},${SV_product_name},${SV_daily_avg},${SV_bp},${SV_sp},${SV_avg_price},${SV_sync_state},${SV_survey_id}) VALUES(?,?,?,?,?,?,?,?)',
+        [cat, product_name, daily_avg, bp, sp, avg_price, 0, survey_id]);
+    print('inserted row id: $id');
+  }
 }

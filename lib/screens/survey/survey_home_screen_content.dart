@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:gemini_app/screens/survey/my_surveys.dart';
+import 'package:gemini_app/screens/survey/survey_category.dart';
 
 import '../colors.dart';
 import '../custom_color.dart';
@@ -8,11 +10,11 @@ import '../database_helper.dart';
 
 
 
-class HomescreenContent extends StatefulWidget {
+class HomescreenSurveyContent extends StatefulWidget {
   @override
-  State<HomescreenContent> createState() => _HomescreenContentState();
+  State<HomescreenSurveyContent> createState() => _HomescreenContentState();
 }
-class _HomescreenContentState extends State<HomescreenContent> {
+class _HomescreenContentState extends State<HomescreenSurveyContent> {
   var color_purple = ColorsLocal.color_purple;
 
   var color_orange = ColorsLocal.color_orange;
@@ -20,24 +22,18 @@ class _HomescreenContentState extends State<HomescreenContent> {
   var color_blue = ColorsLocal.color_blue;
   DatabaseHelper db = DatabaseHelper.instance;
   var color_green = Colors.green;
-  String token;
 
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    _get_token();
 
 
   }
 
-  _get_token() async{
-    token= await db.get_auth_token();
-    setState(() {
 
-    });
-  }
+
   @override
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
@@ -54,7 +50,7 @@ class _HomescreenContentState extends State<HomescreenContent> {
                 height: tool_bar_height,
               ),
               SizedBox(
-                height: 16,
+                height: 32,
               ),
               Flexible(
                 flex: 2,
@@ -64,13 +60,13 @@ class _HomescreenContentState extends State<HomescreenContent> {
               SizedBox(
                 height: 32,
               ),
-              Flexible(
-                flex: 2,
-                fit: FlexFit.loose,
-                child: search_info(context),
-              ),
+              // Flexible(
+              //   flex: 2,
+              //   fit: FlexFit.loose,
+              //   child: search_info(context),
+              // ),
               SizedBox(
-                height: 32,
+                height: 102,
               ),
               Flexible(
                 flex: 6,
@@ -225,72 +221,72 @@ class _HomescreenContentState extends State<HomescreenContent> {
     );
   }
 
-  Widget search_info(BuildContext context) {
-    return Container(
-      height: 160,
-      padding: EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.all(
-          Radius.circular(16.0),
-        ),
-        image: DecorationImage(
-          image: AssetImage("assets/images/home_image.png"),
-          fit: BoxFit.cover,
-        ),
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          Text(
-            'What Produces are you looking for today?',
-            style: TextStyle(
-                color: Colors.white, fontSize: 18, fontWeight: FontWeight.w600),
-          ),
-          SizedBox(
-            height: 8,
-          ),
-          InkWell(
-            onTap: () {
-              // Navigator.push(
-              //   context,
-              //   CupertinoPageRoute(
-              //     builder: (context) => InventoryScreen(),
-              //   ),
-              // );
-            },
-            child: Container(
-              // margin: EdgeInsets.all(8),
-              padding: EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.all(
-                  Radius.circular(50.0),
-                ),
-                color: Colors.white.withOpacity(.2),
-              ),
-              height: 42,
-              child: Row(
-                children: [
-                  Icon(
-                    Icons.search,
-                    size: 18,
-                    color: Colors.white,
-                  ),
-                  SizedBox(
-                    width: 16,
-                  ),
-                  Text(
-                    'Search for Products',
-                    style: TextStyle(
-                        fontWeight: FontWeight.w300, color: Colors.white),
-                  )
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+  // Widget search_info(BuildContext context) {
+  //   return Container(
+  //     height: 160,
+  //     padding: EdgeInsets.all(16),
+  //     decoration: BoxDecoration(
+  //       borderRadius: BorderRadius.all(
+  //         Radius.circular(16.0),
+  //       ),
+  //       image: DecorationImage(
+  //         image: AssetImage("assets/images/home_image.png"),
+  //         fit: BoxFit.cover,
+  //       ),
+  //     ),
+  //     child: Column(
+  //       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+  //       children: [
+  //         Text(
+  //           'What Produces are you looking for today?',
+  //           style: TextStyle(
+  //               color: Colors.white, fontSize: 18, fontWeight: FontWeight.w600),
+  //         ),
+  //         SizedBox(
+  //           height: 8,
+  //         ),
+  //         InkWell(
+  //           onTap: () {
+  //             // Navigator.push(
+  //             //   context,
+  //             //   CupertinoPageRoute(
+  //             //     builder: (context) => InventoryScreen(),
+  //             //   ),
+  //             // );
+  //           },
+  //           child: Container(
+  //             // margin: EdgeInsets.all(8),
+  //             padding: EdgeInsets.all(8),
+  //             decoration: BoxDecoration(
+  //               borderRadius: BorderRadius.all(
+  //                 Radius.circular(50.0),
+  //               ),
+  //               color: Colors.white.withOpacity(.2),
+  //             ),
+  //             height: 42,
+  //             child: Row(
+  //               children: [
+  //                 Icon(
+  //                   Icons.search,
+  //                   size: 18,
+  //                   color: Colors.white,
+  //                 ),
+  //                 SizedBox(
+  //                   width: 16,
+  //                 ),
+  //                 Text(
+  //                   'Search for Products',
+  //                   style: TextStyle(
+  //                       fontWeight: FontWeight.w300, color: Colors.white),
+  //                 )
+  //               ],
+  //             ),
+  //           ),
+  //         ),
+  //       ],
+  //     ),
+  //   );
+  // }
 
   Widget _home_menu(BuildContext context) {
     return Column(
@@ -302,12 +298,12 @@ class _HomescreenContentState extends State<HomescreenContent> {
             Expanded(
               child: InkWell(
                 onTap: () {
-                  // Navigator.push(
-                  //   context,
-                  //   CupertinoPageRoute(
-                  //     builder: (context) => MySales(),
-                  //   ),
-                  // );
+                  Navigator.push(
+                    context,
+                    CupertinoPageRoute(
+                      builder: (context) => SurveyCategory(),
+                    ),
+                  );
                 },
                 child: Container(
                   height: 130,
@@ -335,7 +331,7 @@ class _HomescreenContentState extends State<HomescreenContent> {
                         height: 4,
                       ),
                       Text(
-                        'My Sales',
+                        'New Survey',
                         style: TextStyle(
                             fontSize: 12, fontWeight: FontWeight.w600),
                         textAlign: TextAlign.center,
@@ -351,12 +347,12 @@ class _HomescreenContentState extends State<HomescreenContent> {
             Expanded(
               child: InkWell(
                 onTap: () {
-                  // Navigator.push(
-                  //   context,
-                  //   CupertinoPageRoute(
-                  //     builder: (context) => MyWallet(),
-                  //   ),
-                  // );
+                  Navigator.push(
+                    context,
+                    CupertinoPageRoute(
+                      builder: (context) => MySurvey(),
+                    ),
+                  );
                 },
                 child: Container(
                   height: 130,
@@ -380,7 +376,7 @@ class _HomescreenContentState extends State<HomescreenContent> {
                         height: 4,
                       ),
                       Text(
-                        'My Wallet',
+                        'My Surveys',
                         style: TextStyle(
                             fontSize: 12, fontWeight: FontWeight.w600),
                         textAlign: TextAlign.center,
@@ -423,7 +419,7 @@ class _HomescreenContentState extends State<HomescreenContent> {
                         height: 4,
                       ),
                       Text(
-                        'My Leaderboard',
+                        'Performances',
                         style: TextStyle(
                             fontSize: 12, fontWeight: FontWeight.w600),
                         textAlign: TextAlign.center,
@@ -472,7 +468,7 @@ class _HomescreenContentState extends State<HomescreenContent> {
                         height: 4,
                       ),
                       Text(
-                        'My Orders',
+                        'My Wallet',
                         style: TextStyle(
                             fontSize: 12, fontWeight: FontWeight.w600),
                         textAlign: TextAlign.center,
@@ -517,7 +513,7 @@ class _HomescreenContentState extends State<HomescreenContent> {
                         height: 4,
                       ),
                       Text(
-                        'My Inventory',
+                        'My Profile',
                         style: TextStyle(
                             fontSize: 12, fontWeight: FontWeight.w600),
                         textAlign: TextAlign.center,
@@ -562,7 +558,7 @@ class _HomescreenContentState extends State<HomescreenContent> {
                         height: 4,
                       ),
                       Text(
-                        'My Rewards',
+                        'Report and Issue',
                         style: TextStyle(
                             fontSize: 12, fontWeight: FontWeight.w600),
                         textAlign: TextAlign.center,
@@ -574,145 +570,7 @@ class _HomescreenContentState extends State<HomescreenContent> {
             ),
           ],
         ),
-        SizedBox(
-          height: 16,
-        ),
-        Row(
-          children: [
-            Expanded(
-              child: InkWell(
-                onTap: () {
-                  // Navigator.push(
-                  //   context,
-                  //   CupertinoPageRoute(
-                  //     builder: (context) => MyTeam(),
-                  //   ),
-                  // );
-                },
-                child: Container(
-                  height: 130,
-                  decoration: new BoxDecoration(
-                    border: Border.all(color: HexColor(color_blue), width: .2),
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(8),
-                    ),
-                    // color: HexColor('#D60812'),
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      SvgPicture.asset(
-                        'assets/images/Iconly_Two_tone_3_User.svg',
-                        width: 22,
-                        height: 22,
-                        color: Colors.blue,
-                      ),
-                      SizedBox(
-                        height: 4,
-                      ),
-                      Text(
-                        'My Team',
-                        style: TextStyle(
-                            fontSize: 12, fontWeight: FontWeight.w600),
-                        textAlign: TextAlign.center,
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-            SizedBox(
-              width: 16,
-            ),
-            Expanded(
-              child: InkWell(
-                onTap: () {
-                  // Navigator.push(
-                  //   context,
-                  //   CupertinoPageRoute(
-                  //     builder: (context) => MyProfile(),
-                  //   ),
-                  // );
-                },
-                child: Container(
-                  height: 130,
-                  decoration: new BoxDecoration(
-                    border: Border.all(color: HexColor(color_blue), width: .2),
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(8),
-                    ),
-                    // color: HexColor('#D60812'),
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      SvgPicture.asset(
-                        'assets/images/Iconly_Two_tone_Profile.svg',
-                        width: 22,
-                        height: 22,
-                        color: Colors.blue,
-                      ),
-                      SizedBox(
-                        height: 4,
-                      ),
-                      Text(
-                        'My Profile',
-                        style: TextStyle(
-                            fontSize: 12, fontWeight: FontWeight.w600),
-                        textAlign: TextAlign.center,
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-            SizedBox(
-              width: 16,
-            ),
-            Expanded(
-              child: InkWell(
-                onTap: () {
-                  // Navigator.push(
-                  //   context,
-                  //   CupertinoPageRoute(
-                  //     builder: (context) => ReportIssue(1),
-                  //   ),
-                  // );
-                },
-                child: Container(
-                  height: 130,
-                  decoration: new BoxDecoration(
-                    border: Border.all(color: HexColor(color_blue), width: .2),
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(8),
-                    ),
-                    // color: HexColor('#D60812'),
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      SvgPicture.asset(
-                        'assets/images/Iconly_Two_tone_Info_Circle.svg',
-                        width: 22,
-                        height: 22,
-                        color: Colors.blue,
-                      ),
-                      SizedBox(
-                        height: 4,
-                      ),
-                      Text(
-                        'Report an issue',
-                        style: TextStyle(
-                            fontSize: 12, fontWeight: FontWeight.w600),
-                        textAlign: TextAlign.center,
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
+
       ],
     );
   }

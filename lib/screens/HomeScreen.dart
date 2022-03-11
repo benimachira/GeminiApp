@@ -148,41 +148,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ),
                 ),
-
-                FutureBuilder(
-                    future:db.get_user_role() ,
-                    builder: (context,snapshot){
-                  if(snapshot.hasData){
-                    String role = snapshot.data;
-                    print(role);
-                    if(role=='researcher'){
-                      return InkWell(
-                        onTap: () {
-                          // bottomTapped(3);
-
-                          Navigator.push(
-                            context,
-                            CupertinoPageRoute(
-                              builder: (context) => SurveyCategory(),
-                            ),
-                          );
-                        },
-
-                        child: Container(
-                          padding: EdgeInsets.all(16),
-                          child: Icon(
-                            Icons.list,
-                            color: Colors.blue,
-                          ),
-                        ),
-                      );
-                    }else{
-                      return Container(height: 20,);
-                    }
-                  }else{
-                    return Container(height: 20,);
-                  }
-                }),
+                
 
                 InkWell(
                   onTap: () {

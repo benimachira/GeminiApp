@@ -1,17 +1,17 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:gemini_app/screens/survey/survey_home_screen_content.dart';
 
 import '../colors.dart';
-import '../home_screen_content.dart';
 
 
-class HomeScreen extends StatefulWidget {
+class HomeScreenSurvey extends StatefulWidget {
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenState extends State<HomeScreenSurvey> {
   var color_purple = ColorsLocal.color_purple;
 
   var color_orange = ColorsLocal.color_orange;
@@ -44,7 +44,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: HomescreenContent(),
+      body: HomescreenSurveyContent(),
       floatingActionButton: Container(
         margin: EdgeInsets.only(right: 8, left: 8),
         child: Card(
