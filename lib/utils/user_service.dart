@@ -157,6 +157,8 @@ class UserService {
     try {
       var x = json.decode(response.body);
 
+      print(response.body);
+
       if (x['success'] == 1) {
         Map data = x['data'];
 

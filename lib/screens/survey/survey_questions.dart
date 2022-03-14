@@ -40,7 +40,11 @@ class _SurveyQuestionsState extends State<SurveyQuestions> {
   List<String> _collection = ['Select one', 'Collect', 'Deliver'];
 
   String _selectedmarket = 'Select one';
+  String _q1 = 'Select one';
+
   String _selectedgrad = 'Select one';
+
+  TimeOfDay selectedTime = TimeOfDay.now();
 
   @override
   void initState() {
@@ -87,7 +91,8 @@ class _SurveyQuestionsState extends State<SurveyQuestions> {
                         _controller.add(_name_controller);
                         ModelSurveyQuestions questions = snap[index];
 
-                        print(questions.data_input_type);
+
+
                         return Container(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -245,264 +250,334 @@ class _SurveyQuestionsState extends State<SurveyQuestions> {
                                       ],
                                     )
                                   : questions.data_input_type == 'selection'
-                                      ? DropdownButtonHideUnderline(
-                                          child: DropdownButton<String>(
-                                            focusColor: Colors.white,
-                                            value: questions.id == 7
-                                                ? _selectedgrad
-                                                : _selectedmarket,
-                                            //elevation: 5,
-                                            style:
-                                                TextStyle(color: Colors.white),
-                                            iconEnabledColor: Colors.black,
-                                            items: questions.id == 7
-                                                ? _grade.map<
-                                                        DropdownMenuItem<
-                                                            String>>(
-                                                    (String value) {
-                                                    return DropdownMenuItem<
-                                                        String>(
-                                                      value: value,
-                                                      child: Text(
-                                                        value,
-                                                        style: TextStyle(
-                                                            color:
-                                                                Colors.black),
+                                      ? _drop_down(questions)
+                                      : questions.data_input_type == 'clock'
+                                          ? Row(
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                Expanded(
+                                                  child: Container(
+                                                    decoration:
+                                                        new BoxDecoration(
+                                                      border: Border.all(
+                                                          color:
+                                                              Colors.grey[200]),
+                                                      borderRadius:
+                                                          BorderRadius.all(
+                                                        Radius.circular(8),
                                                       ),
-                                                    );
-                                                  }).toList()
-                                                : questions.id == 12
-                                                    ? _collection.map<
-                                                            DropdownMenuItem<
-                                                                String>>(
-                                                        (String value) {
-                                                        return DropdownMenuItem<
-                                                            String>(
-                                                          value: value,
-                                                          child: Text(
-                                                            value,
-                                                            style: TextStyle(
-                                                                color: Colors
-                                                                    .black),
-                                                          ),
-                                                        );
-                                                      }).toList()
-                                                    : _markets.map<
-                                                            DropdownMenuItem<
-                                                                String>>(
-                                                        (String value) {
-                                                        return DropdownMenuItem<
-                                                            String>(
-                                                          value: value,
-                                                          child: Text(
-                                                            value,
-                                                            style: TextStyle(
-                                                                color: Colors
-                                                                    .black),
-                                                          ),
-                                                        );
-                                                      }).toList(),
-
-                                            onChanged: (String value) {
-                                              setState(() {
-                                                _selectedmarket = value;
-                                                // _chosenValue = value;
-                                                //
-                                                //
-                                                // print(_chosenValue);
-                                              });
-                                            },
-                                          ),
-                                        )
-                                      : Row(
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            Expanded(
-                                              child: InkWell(
-                                                onTap: () {
-                                                  Navigator.push(
-                                                    context,
-                                                    CupertinoPageRoute(
-                                                      builder: (context) =>
-                                                          SurveyRetailerProducts(
-                                                              widget.id),
+                                                      color: Colors.grey[100],
                                                     ),
-                                                  );
-                                                },
-                                                child: Container(
-                                                  decoration: new BoxDecoration(
-                                                    border: Border.all(
-                                                        color:
-                                                            Colors.grey[200]),
-                                                    borderRadius:
-                                                        BorderRadius.all(
-                                                      Radius.circular(8),
+                                                    padding: EdgeInsets.only(
+                                                        right: 16, left: 16),
+                                                    height: 45,
+                                                    child: Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        InkWell(
+                                                          onTap: () {
+                                                            _selectTime(
+                                                                context);
+                                                          },
+                                                          child: Row(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .start,
+                                                            children: [
+                                                              Center(
+                                                                child: Text(
+                                                                  '${selectedTime.hour}:${selectedTime.minute}',
+                                                                  style: TextStyle(
+                                                                      color: Colors
+                                                                          .grey),
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ),
+                                                      ],
                                                     ),
-                                                    color: Colors.grey[100],
-                                                  ),
-                                                  padding: EdgeInsets.only(
-                                                      right: 16, left: 16),
-                                                  height: 45,
-                                                  child: Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment.start,
-                                                    children: [
-                                                      FutureBuilder(
-                                                          future:
-                                                              db.get_survey(),
-                                                          builder: (context,
-                                                              snapshot) {
-                                                            if (snapshot
-                                                                .hasData) {
-                                                              List<Map> data =
-                                                                  snapshot.data;
-
-                                                              return Row(
-                                                                mainAxisAlignment:
-                                                                    MainAxisAlignment
-                                                                        .start,
-                                                                children: [
-                                                                  Center(
-                                                                    child: Text(
-                                                                      '${data.length} items added',
-                                                                      style: TextStyle(
-                                                                          color: data.length > 0
-                                                                              ? Colors.green
-                                                                              : Colors.grey),
-                                                                    ),
-                                                                  ),
-                                                                ],
-                                                              );
-                                                            } else if (snapshot
-                                                                .hasError) {
-                                                              print(snapshot
-                                                                  .error);
-                                                              return Row(
-                                                                mainAxisAlignment:
-                                                                    MainAxisAlignment
-                                                                        .start,
-                                                                children: [
-                                                                  Center(
-                                                                    child: Text(
-                                                                      'Error',
-                                                                      style: TextStyle(
-                                                                          color:
-                                                                              Colors.grey),
-                                                                    ),
-                                                                  ),
-                                                                ],
-                                                              );
-                                                            } else {
-                                                              return Row(
-                                                                mainAxisAlignment:
-                                                                    MainAxisAlignment
-                                                                        .start,
-                                                                children: [
-                                                                  Center(
-                                                                    child:
-                                                                        CircularProgressIndicator(),
-                                                                  ),
-                                                                ],
-                                                              );
-                                                            }
-                                                          }),
-                                                    ],
                                                   ),
                                                 ),
-                                              ),
-                                            ),
-                                            SizedBox(
-                                              width: 16,
-                                            ),
-                                            FutureBuilder(
-                                                future: UserService()
-                                                    .select_quiz(widget.id,
-                                                        questions.id),
-                                                builder: (context, snapshot) {
-                                                  //  if (snapshot.hasData) {
-                                                  ModelSurveyAnswers x =
-                                                      snapshot.data;
+                                                SizedBox(
+                                                  width: 16,
+                                                ),
+                                                FutureBuilder(
+                                                    future: UserService()
+                                                        .select_quiz(widget.id,
+                                                            questions.id),
+                                                    builder:
+                                                        (context, snapshot) {
+                                                      //  if (snapshot.hasData) {
+                                                      ModelSurveyAnswers x =
+                                                          snapshot.data;
 
-                                                  // return Text('data${x.id}');
+                                                      // return Text('data${x.id}');
 
-                                                  // if (x == null) {
-                                                  return InkWell(
-                                                    child: Icon(
-                                                      Icons.upload_outlined,
-                                                      size: 20,
-                                                      color: Colors.grey,
-                                                    ),
-                                                    onTap: () async {
-                                                      List<Map> x =
-                                                          await db.get_survey();
+                                                      // if (x == null) {
+                                                      return InkWell(
+                                                        child: Icon(
+                                                          Icons.upload_outlined,
+                                                          size: 20,
+                                                          color: Colors.grey,
+                                                        ),
+                                                        onTap: () async {
+                                                          List<Map> x = await db
+                                                              .get_survey();
 
-                                                      if (x.length == 0) {
-                                                        UniversalMethods
-                                                            .show_toast(
-                                                                'O items');
-                                                        return;
-                                                      }
+                                                          if (x.length == 0) {
+                                                            UniversalMethods
+                                                                .show_toast(
+                                                                    'O items');
+                                                            return;
+                                                          }
 
-                                                      Map<String, dynamic>
-                                                          requestbody = {
-                                                        'survey_id':
-                                                            '${widget.id}',
-                                                        'survey_question_id':
-                                                            '${questions.id}',
-                                                        'survey_question':
-                                                            questions.question,
-                                                        'survey_answer': '${x}',
-                                                        'save_data_type':
-                                                            questions
-                                                                .data_input_type,
-                                                      };
+                                                          Map<String, dynamic>
+                                                              requestbody = {
+                                                            'survey_id':
+                                                                '${widget.id}',
+                                                            'survey_question_id':
+                                                                '${questions.id}',
+                                                            'survey_question':
+                                                                questions
+                                                                    .question,
+                                                            'survey_answer':
+                                                                '${x}',
+                                                            'save_data_type':
+                                                                questions
+                                                                    .data_input_type,
+                                                          };
 
-                                                      UniversalMethods()
-                                                          .showLoaderDialog(
-                                                              context,
-                                                              'Saving Answer');
+                                                          UniversalMethods()
+                                                              .showLoaderDialog(
+                                                                  context,
+                                                                  'Saving Answer');
 
-                                                      int feed = await UserService()
-                                                          .submit_survey_question(
-                                                              requestbody);
+                                                          int feed = await UserService()
+                                                              .submit_survey_question(
+                                                                  requestbody);
 
-                                                      if (feed == 1) {
-                                                        UniversalMethods.show_toast(
-                                                            'Question submitted');
+                                                          if (feed == 1) {
+                                                            UniversalMethods
+                                                                .show_toast(
+                                                                    'Question submitted');
 
-                                                        int feed = await db
-                                                            .update_survey(
-                                                                widget.id);
-                                                      } else {
-                                                        UniversalMethods.show_toast(
-                                                            'An error occurred');
-                                                      }
-                                                      Navigator.of(context)
-                                                          .pop();
+                                                            int feed = await db
+                                                                .update_survey(
+                                                                    widget.id);
+                                                          } else {
+                                                            UniversalMethods
+                                                                .show_toast(
+                                                                    'An error occurred');
+                                                          }
+                                                          Navigator.of(context)
+                                                              .pop();
 
-                                                      // showAlertDialog(requestbody);
+                                                          // showAlertDialog(requestbody);
+                                                        },
+                                                      );
+                                                    }),
+                                              ],
+                                            )
+                                          : Row(
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                Expanded(
+                                                  child: InkWell(
+                                                    onTap: () {
+                                                      Navigator.push(
+                                                        context,
+                                                        CupertinoPageRoute(
+                                                          builder: (context) =>
+                                                              SurveyRetailerProducts(
+                                                                  widget.id),
+                                                        ),
+                                                      );
                                                     },
-                                                  );
-                                                  // } else {
-                                                  //   String xr =
-                                                  //       x.survey_data['answer'];
-                                                  //   return Icon(
-                                                  //     Icons.check,
-                                                  //     size: 16,
-                                                  //     color: Colors.green,
-                                                  //   );
-                                                  // }
+                                                    child: Container(
+                                                      decoration:
+                                                          new BoxDecoration(
+                                                        border: Border.all(
+                                                            color: Colors
+                                                                .grey[200]),
+                                                        borderRadius:
+                                                            BorderRadius.all(
+                                                          Radius.circular(8),
+                                                        ),
+                                                        color: Colors.grey[100],
+                                                      ),
+                                                      padding: EdgeInsets.only(
+                                                          right: 16, left: 16),
+                                                      height: 45,
+                                                      child: Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .start,
+                                                        children: [
+                                                          FutureBuilder(
+                                                              future: db
+                                                                  .get_survey(),
+                                                              builder: (context,
+                                                                  snapshot) {
+                                                                if (snapshot
+                                                                    .hasData) {
+                                                                  List<Map>
+                                                                      data =
+                                                                      snapshot
+                                                                          .data;
 
-                                                  // } else {
-                                                  //   return Icon(
-                                                  //     Icons.watch_later_rounded,
-                                                  //     size: 16,
-                                                  //     color: Colors.grey,
-                                                  //   );
-                                                  // }
-                                                }),
-                                          ],
-                                        ),
+                                                                  return Row(
+                                                                    mainAxisAlignment:
+                                                                        MainAxisAlignment
+                                                                            .start,
+                                                                    children: [
+                                                                      Center(
+                                                                        child:
+                                                                            Text(
+                                                                          '${data.length} items added',
+                                                                          style:
+                                                                              TextStyle(color: data.length > 0 ? Colors.green : Colors.grey),
+                                                                        ),
+                                                                      ),
+                                                                    ],
+                                                                  );
+                                                                } else if (snapshot
+                                                                    .hasError) {
+                                                                  print(snapshot
+                                                                      .error);
+                                                                  return Row(
+                                                                    mainAxisAlignment:
+                                                                        MainAxisAlignment
+                                                                            .start,
+                                                                    children: [
+                                                                      Center(
+                                                                        child:
+                                                                            Text(
+                                                                          'Error',
+                                                                          style:
+                                                                              TextStyle(color: Colors.grey),
+                                                                        ),
+                                                                      ),
+                                                                    ],
+                                                                  );
+                                                                } else {
+                                                                  return Row(
+                                                                    mainAxisAlignment:
+                                                                        MainAxisAlignment
+                                                                            .start,
+                                                                    children: [
+                                                                      Center(
+                                                                        child:
+                                                                            CircularProgressIndicator(),
+                                                                      ),
+                                                                    ],
+                                                                  );
+                                                                }
+                                                              }),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                                SizedBox(
+                                                  width: 16,
+                                                ),
+                                                FutureBuilder(
+                                                    future: UserService()
+                                                        .select_quiz(widget.id,
+                                                            questions.id),
+                                                    builder:
+                                                        (context, snapshot) {
+                                                      //  if (snapshot.hasData) {
+                                                      ModelSurveyAnswers x =
+                                                          snapshot.data;
+
+                                                      // return Text('data${x.id}');
+
+                                                      // if (x == null) {
+                                                      return InkWell(
+                                                        child: Icon(
+                                                          Icons.upload_outlined,
+                                                          size: 20,
+                                                          color: Colors.grey,
+                                                        ),
+                                                        onTap: () async {
+                                                          List<Map> x = await db
+                                                              .get_survey();
+
+                                                          if (x.length == 0) {
+                                                            UniversalMethods
+                                                                .show_toast(
+                                                                    'O items');
+                                                            return;
+                                                          }
+
+                                                          Map<String, dynamic>
+                                                              requestbody = {
+                                                            'survey_id':
+                                                                '${widget.id}',
+                                                            'survey_question_id':
+                                                                '${questions.id}',
+                                                            'survey_question':
+                                                                questions
+                                                                    .question,
+                                                            'survey_answer':
+                                                                '${x}',
+                                                            'save_data_type':
+                                                                questions
+                                                                    .data_input_type,
+                                                          };
+
+                                                          UniversalMethods()
+                                                              .showLoaderDialog(
+                                                                  context,
+                                                                  'Saving Answer');
+
+                                                          int feed = await UserService()
+                                                              .submit_survey_question(
+                                                                  requestbody);
+
+                                                          if (feed == 1) {
+                                                            UniversalMethods
+                                                                .show_toast(
+                                                                    'Question submitted');
+
+                                                            int feed = await db
+                                                                .update_survey(
+                                                                    widget.id);
+                                                          } else {
+                                                            UniversalMethods
+                                                                .show_toast(
+                                                                    'An error occurred');
+                                                          }
+                                                          Navigator.of(context)
+                                                              .pop();
+
+                                                          // showAlertDialog(requestbody);
+                                                        },
+                                                      );
+                                                      // } else {
+                                                      //   String xr =
+                                                      //       x.survey_data['answer'];
+                                                      //   return Icon(
+                                                      //     Icons.check,
+                                                      //     size: 16,
+                                                      //     color: Colors.green,
+                                                      //   );
+                                                      // }
+
+                                                      // } else {
+                                                      //   return Icon(
+                                                      //     Icons.watch_later_rounded,
+                                                      //     size: 16,
+                                                      //     color: Colors.grey,
+                                                      //   );
+                                                      // }
+                                                    }),
+                                              ],
+                                            ),
 
                               SizedBox(
                                 height: 48,
@@ -535,27 +610,211 @@ class _SurveyQuestionsState extends State<SurveyQuestions> {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: InkWell(
-          onTap: () async {
-            UniversalMethods().showLoaderDialog(context, 'Completing survey');
-
-            Map shat = {
-              'survey_id': '${widget.id}',
-              'status': 'complete',
-              'is_eligible': '${1}',
-            };
-
-            int x = await UserService().complete_survey(shat);
-            if (x == 0) {
-              Navigator.pop(context);
-              UniversalMethods.show_toast('An error has occurred');
-              return;
-            } else {
-              Navigator.pop(context);
-              Navigator.of(context).pop();
-            }
+          onTap: () {
+            _end_survey(1);
           },
           child: CustomBottomButton('Complete Survey', Icons.arrow_forward)),
     );
+  }
+
+  _end_survey(state) async {
+    UniversalMethods().showLoaderDialog(context, 'Completing survey');
+
+    Map shat = {
+      'survey_id': '${widget.id}',
+      'status': 'complete',
+      'is_eligible': '${state}',
+    };
+
+    int x = await UserService().complete_survey(shat);
+    if (x == 0) {
+      Navigator.pop(context);
+      UniversalMethods.show_toast('An error has occurred');
+      return;
+    } else {
+      Navigator.pop(context);
+      Navigator.of(context).pop();
+    }
+  }
+
+  Widget _drop_down(ModelSurveyQuestions questions) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Expanded(
+              child: DropdownButton<String>(
+                focusColor: Colors.white,
+                value: questions.id == 7 ? _selectedgrad : _selectedmarket,
+                //elevation: 5,
+                style: TextStyle(color: Colors.white),
+                iconEnabledColor: Colors.black,
+                items: questions.id == 7
+                    ? _grade.map<DropdownMenuItem<String>>((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(
+                            value,
+                            style: TextStyle(color: Colors.black),
+                          ),
+                        );
+                      }).toList()
+                    : questions.id == 12
+                        ? _collection
+                            .map<DropdownMenuItem<String>>((String value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Text(
+                                value,
+                                style: TextStyle(color: Colors.black),
+                              ),
+                            );
+                          }).toList()
+                        : _markets
+                            .map<DropdownMenuItem<String>>((String value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Text(
+                                value,
+                                style: TextStyle(color: Colors.black),
+                              ),
+                            );
+                          }).toList(),
+
+                onChanged: (String value) {
+                  setState(() {
+
+
+                    questions.id==1?_q1:_selectedmarket = value;
+                    // _chosenValue = value;
+                    //
+                    //
+                    // print(_chosenValue);
+                  });
+                },
+              ),
+            ),
+            SizedBox(
+              width: 16,
+            ),
+            FutureBuilder(
+                future: UserService().select_quiz(widget.id, questions.id),
+                builder: (context, snapshot) {
+                  //  if (snapshot.hasData) {
+                  ModelSurveyAnswers x = snapshot.data;
+
+                  // return Text('data${x.id}');
+
+                  if (x == null) {
+                    return InkWell(
+                      child: Icon(
+                        Icons.upload_outlined,
+                        size: 20,
+                        color: Colors.grey,
+                      ),
+                      onTap: () async {
+                        String val = questions.id==1?_q1:_selectedmarket;
+
+                        if (val == 'Select one') {
+                          UniversalMethods.show_toast('Select one');
+                          return;
+                        }
+
+                        if (questions.id == 1 && val == 'No') {
+                          await _end_survey(1);
+                          UniversalMethods.show_toast('Survey ended');
+                          Navigator.pop(context);
+                          Navigator.of(context).pop();
+                          return;
+                        }
+                        if (questions.id == 2 && val == 'No') {
+                          await _end_survey(1);
+                          UniversalMethods.show_toast('Survey ended');
+                          Navigator.pop(context);
+                          Navigator.of(context).pop();
+                          return;
+                        }
+                        if (questions.id == 2 && val == 'No') {
+                          await _end_survey(1);
+                          UniversalMethods.show_toast('Survey ended');
+                          Navigator.pop(context);
+                          Navigator.of(context).pop();
+                          return;
+                        }
+
+                        Map<String, dynamic> requestbody = {
+                          'survey_id': '${widget.id}',
+                          'survey_question_id': '${questions.id}',
+                          'survey_question': val,
+                          'survey_answer': '${x}',
+                          'save_data_type': questions.data_input_type,
+                        };
+
+                        UniversalMethods()
+                            .showLoaderDialog(context, 'Saving Answer');
+
+                        int feed = await UserService()
+                            .submit_survey_question(requestbody);
+
+                        if (feed == 1) {
+                          UniversalMethods.show_toast('Question submitted');
+
+                          int feed = await db.update_survey(widget.id);
+                        } else {
+                          UniversalMethods.show_toast('An error occurred');
+                        }
+                        Navigator.of(context).pop();
+
+                        // showAlertDialog(requestbody);
+                      },
+                    );
+                  } else {
+                    ModelSurveyAnswers ans = snapshot.data;
+                    setState(() {
+                      _q1=ans.survey_data['answer'];
+                    });
+
+
+                    return Icon(
+                      Icons.check,
+                      size: 16,
+                      color: Colors.green,
+                    );
+
+
+                  }
+                }),
+          ],
+        ),
+        //SizedBox(height: 16,),
+      ],
+    );
+  }
+
+  // _quiz (ModelSurveyQuestions questions)async{
+  //   await UserService().select_quiz(widget.id, questions.id);
+  //   setState(() {
+  //
+  //   });
+  // }
+
+  Future<void> _selectTime(BuildContext context) async {
+    final TimeOfDay picked_s = await showTimePicker(
+        context: context,
+        initialTime: selectedTime,
+        builder: (BuildContext context, Widget child) {
+          return MediaQuery(
+            data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: false),
+            child: child,
+          );
+        });
+
+    if (picked_s != null && picked_s != selectedTime)
+      setState(() {
+        selectedTime = picked_s;
+      });
   }
 
   showAlertDialog(Map<String, String> req_body) async {
